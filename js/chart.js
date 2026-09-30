@@ -13,12 +13,12 @@ new Chart(ctx, {
       tension: 0.4,
     }, { 
       data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
-      borderColor: "red",
+      borderColor: "blue",
       pointRadius: 2,
       tension: 0.4,
     }, { 
       data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
-      borderColor: "blue",
+      borderColor: "green",
       pointRadius: 2,
       tension: 0.4,
     }]
