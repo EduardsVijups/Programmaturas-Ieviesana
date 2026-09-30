@@ -7,7 +7,7 @@ new Chart(ctx, {
   data: {
     labels: xValues,
     datasets: [{ 
-      data: [900,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      data: [870,1140,1060,1060,1070,1110,1330,2210,7830,2478],
       borderColor: "red",
       pointRadius: 2,
       tension: 0.4,
