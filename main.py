@@ -2,6 +2,7 @@ import requests
 import json
 
 from database import data_handler
+import gui
 
 def get_api_response():
     url = "https://api.atvertiedati.lv/v1/prices/fuel/latest?fuel_type=e95"
@@ -24,7 +25,7 @@ def get_api_response_from_file():
 
     data_handler.save_data_to_db(data)
 
-
-get_api_response_from_file()
-data_from_db = data_handler.get_data_from_db()
-print(data_from_db)
+gui.initialize_gui()
+#get_api_response_from_file()
+#data_from_db = data_handler.get_data_from_db()
+#print(data_from_db)
