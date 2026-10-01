@@ -15,17 +15,12 @@ def get_api_response():
     data = response.json()
 
     data_handler.save_data_to_db(data)
-    
-    #for item in data['data']['fuel_types']['e95']:
-    #    print(f" Station: {item['station']}, Price: {item['price']}, Date: {item['price_date']}")
+
 
 
 def get_api_response_from_file():
     with open('data.json', 'r') as file:
         data = json.load(file)
-
-    #for item in data['data']['fuel_types']['e95']:
-    #    print(f" Station: {item['station']}, Price: {item['price']}, Date: {item['price_date']}")
 
     data_handler.save_data_to_db(data)
 
