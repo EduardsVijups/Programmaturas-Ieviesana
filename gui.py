@@ -23,11 +23,9 @@ def fetch_and_plot_data():
     ax.set_xlabel('Station')
     ax.set_ylabel('Price (EUR/litre)')
     ax.set_title('Fuel Prices by Station')
-    ax.set_xticklabels(stations)
-    ax.tick_params(axis='x', rotation=45)
-    # Set horizontal alignment of the tick labels to right
-    for label in ax.get_xticklabels():
-        label.set_ha('right')
+    # Set the tick positions and labels
+    ax.set_xticks(range(len(stations)))
+    ax.set_xticklabels(stations, rotation=45, ha='right')
 
     # Redraw the canvas
     canvas.draw()

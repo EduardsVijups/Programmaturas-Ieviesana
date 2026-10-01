@@ -1,2 +1,3 @@
 database/__pycache__/
 database/fuel_prices.db
+.claude/
