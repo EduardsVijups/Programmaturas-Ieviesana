@@ -2,7 +2,8 @@ import tkinter as tk
 from tkinter import ttk
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-from database.data_handler import get_data_from_db
+from database.data_handler import get_data_from_db_at_date
+from datetime import datetime
 
 # Lazy loading of ax and canvas to avoid circular import issues
 ax = None
@@ -12,7 +13,7 @@ def fetch_and_plot_data():
     # Clear the current figure
     ax.clear()
 
-    data_dict = get_data_from_db()
+    data_dict = get_data_from_db_at_date(datetime.today().strftime('%Y-%m-%d'))
 
     stations = []
     prices = []

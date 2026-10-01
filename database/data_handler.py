@@ -24,8 +24,8 @@ def save_data_to_db(data):
     
     conn.commit()
 
-def get_data_from_db():
-    cursor.execute('SELECT * FROM fuel_prices')
+def get_data_from_db_at_date(date):
+    cursor.execute('SELECT * FROM fuel_prices WHERE price_date = ?', (date,))
     rows = cursor.fetchall()
 
     t = {}

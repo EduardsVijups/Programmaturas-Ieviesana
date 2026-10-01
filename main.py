@@ -1,5 +1,6 @@
 import requests
 import json
+from datetime import datetime
 
 from database import data_handler
 import gui
@@ -25,7 +26,14 @@ def get_api_response_from_file():
 
     data_handler.save_data_to_db(data)
 
-gui.initialize_gui()
-#get_api_response_from_file()
-#data_from_db = data_handler.get_data_from_db()
-#print(data_from_db)
+def main():
+    dateString = datetime.today().strftime('%Y-%m-%d')
+    data_from_db = data_handler.get_data_from_db_at_date(dateString)
+
+    if not data_from_db:
+        get_api_response()
+        main()
+    else:
+        gui.initialize_gui()
+
+main()
