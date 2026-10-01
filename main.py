@@ -5,10 +5,16 @@ from datetime import datetime
 from database import data_handler
 import gui
 
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env file
+load_dotenv()  
+
 def get_api_response():
     url = "https://api.atvertiedati.lv/v1/prices/fuel/latest?fuel_type=e95"
     headers = {
-        'X-Api-Key': 'ad_live_9929adb1_Zt_t64Lh8Z9TCZMRhxNQ3Utwx892h57qRp4JZCtEBtI'
+        'X-Api-Key': os.getenv('API_KEY')
     }
 
 

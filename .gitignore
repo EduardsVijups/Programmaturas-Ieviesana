@@ -2,3 +2,4 @@ database/__pycache__/
 database/fuel_prices.db
 __pycache__/
 .claude/
+.env
