@@ -101,7 +101,7 @@ def initialize_gui():
     cheapest_label = ttk.Label(
         pages['prices'],
         text="",
-        font=("Segoe UI", 28, "bold"),
+        font=("Segoe UI", 20, "bold"),
         justify=tk.LEFT,
         anchor=tk.W,
     )
