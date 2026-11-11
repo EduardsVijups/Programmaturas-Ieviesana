@@ -8,6 +8,7 @@ from datetime import datetime
 
 # Lazy loading of widgets to avoid circular import issues
 cheapest_label = None
+average_label = None
 prices_table = None
 history_ax = None
 history_canvas = None
@@ -26,6 +27,7 @@ def fetch_and_show_cheapest():
 
     if not data_dict:
         cheapest_label.config(text="No price data for today")
+        average_label.config(text="")
         return
 
     # Table: all stations, cheapest first
@@ -36,6 +38,9 @@ def fetch_and_show_cheapest():
     cheapest_label.config(
         text=f"Cheapest station today:\n{cheapest['station']}\n{cheapest['price']:.3f} EUR/litre"
     )
+
+    average = sum(v['price'] for v in data_dict.values()) / len(data_dict)
+    average_label.config(text=f"Average price today: {average:.3f} EUR/litre")
 
 
 def fetch_and_plot_history():
@@ -90,17 +95,26 @@ def initialize_gui():
     content = ttk.Frame(root)
     content.pack(fill=tk.BOTH, expand=True)
 
-    # Page 1: cheapest station (label), table of all stations
+    # Page 1: cheapest station + average (labels) + table of all stations
     pages['prices'] = ttk.Frame(content)
-    global cheapest_label, prices_table
+    global cheapest_label, average_label, prices_table
     cheapest_label = ttk.Label(
         pages['prices'],
         text="",
         font=("Segoe UI", 28, "bold"),
-        justify=tk.CENTER,
-        anchor=tk.CENTER,
+        justify=tk.LEFT,
+        anchor=tk.W,
     )
-    cheapest_label.pack(fill=tk.X, pady=20)
+    cheapest_label.pack(fill=tk.X, padx=20, pady=(20, 5))
+
+    average_label = ttk.Label(
+        pages['prices'],
+        text="",
+        font=("Segoe UI", 14),
+        justify=tk.LEFT,
+        anchor=tk.W,
+    )
+    average_label.pack(fill=tk.X, padx=20, pady=(0, 20))
 
     table_frame = ttk.Frame(pages['prices'])
     table_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 20))
@@ -108,10 +122,10 @@ def initialize_gui():
     prices_table = ttk.Treeview(
         table_frame, columns=('station', 'price'), show='headings', height=8
     )
-    prices_table.heading('station', text='Station')
-    prices_table.heading('price', text='Price (EUR/litre)')
+    prices_table.heading('station', text='Station', anchor=tk.W)
+    prices_table.heading('price', text='Price (EUR/litre)', anchor=tk.W)
     prices_table.column('station', anchor=tk.W, width=300)
-    prices_table.column('price', anchor=tk.E, width=200)
+    prices_table.column('price', anchor=tk.W, width=200)
 
     scrollbar = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=prices_table.yview)
     prices_table.configure(yscrollcommand=scrollbar.set)
