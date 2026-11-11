@@ -8,6 +8,7 @@ from datetime import datetime
 
 # Lazy loading of widgets to avoid circular import issues
 cheapest_label = None
+prices_table = None
 history_ax = None
 history_canvas = None
 
@@ -20,9 +21,16 @@ switch_button = None
 def fetch_and_show_cheapest():
     data_dict = get_data_from_db_at_date(datetime.today().strftime('%Y-%m-%d'))
 
+    # Clear the table before refilling it
+    prices_table.delete(*prices_table.get_children())
+
     if not data_dict:
         cheapest_label.config(text="No price data for today")
         return
+
+    # Table: all stations, cheapest first
+    for value in sorted(data_dict.values(), key=lambda v: v['price']):
+        prices_table.insert('', tk.END, values=(value['station'], f"{value['price']:.3f}"))
 
     cheapest = min(data_dict.values(), key=lambda v: v['price'])
     cheapest_label.config(
@@ -82,9 +90,9 @@ def initialize_gui():
     content = ttk.Frame(root)
     content.pack(fill=tk.BOTH, expand=True)
 
-    # Page 1: cheapest station (label)
+    # Page 1: cheapest station (label), table of all stations
     pages['prices'] = ttk.Frame(content)
-    global cheapest_label
+    global cheapest_label, prices_table
     cheapest_label = ttk.Label(
         pages['prices'],
         text="",
@@ -92,7 +100,23 @@ def initialize_gui():
         justify=tk.CENTER,
         anchor=tk.CENTER,
     )
-    cheapest_label.pack(fill=tk.BOTH, expand=True)
+    cheapest_label.pack(fill=tk.X, pady=20)
+
+    table_frame = ttk.Frame(pages['prices'])
+    table_frame.pack(fill=tk.BOTH, expand=True, padx=20, pady=(0, 20))
+
+    prices_table = ttk.Treeview(
+        table_frame, columns=('station', 'price'), show='headings', height=8
+    )
+    prices_table.heading('station', text='Station')
+    prices_table.heading('price', text='Price (EUR/litre)')
+    prices_table.column('station', anchor=tk.W, width=300)
+    prices_table.column('price', anchor=tk.E, width=200)
+
+    scrollbar = ttk.Scrollbar(table_frame, orient=tk.VERTICAL, command=prices_table.yview)
+    prices_table.configure(yscrollcommand=scrollbar.set)
+    prices_table.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
     # Page 2: price history (line chart)
     pages['history'] = ttk.Frame(content)
