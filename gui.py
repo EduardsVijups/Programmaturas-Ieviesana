@@ -3,13 +3,6 @@ from tkinter import ttk
 import history_page
 import main_page
 
-# Lazy loading of widgets to avoid circular import issues
-cheapest_label = None
-average_label = None
-prices_table = None
-history_ax = None
-history_canvas = None
-
 # GUI state
 current_page = 'prices'
 pages = {}
