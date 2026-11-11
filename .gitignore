@@ -1,5 +1,6 @@
 database/__pycache__/
 database/fuel_prices.db
+database/fuel_prices_old.db
 __pycache__/
 .claude/
 .env

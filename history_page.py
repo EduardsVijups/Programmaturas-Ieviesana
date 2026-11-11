@@ -1,0 +1,25 @@
+from datetime import datetime
+import matplotlib.dates as mdates
+from database.data_handler import get_price_history
+
+
+def plot_price_history(ax):
+    """Draw one line per station showing price over time."""
+    ax.clear()
+
+    history = get_price_history()
+
+    for station, points in history.items():
+        dates = [datetime.strptime(d, '%Y-%m-%d') for d, _ in points]
+        prices = [p for _, p in points]
+        ax.plot(dates, prices, marker='o', markersize=3, label=station)
+
+    ax.set_xlabel('Date')
+    ax.set_ylabel('Price (EUR/litre)')
+    ax.set_title('Fuel Price History')
+    ax.grid(True, alpha=0.3)
+    if history:
+        ax.legend()
+
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
+    ax.figure.autofmt_xdate()

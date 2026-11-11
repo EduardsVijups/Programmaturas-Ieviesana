@@ -32,3 +32,11 @@ def get_data_from_db_at_date(date):
     for row in rows:
         t[row[0]] = {'station': row[1], 'price': row[2], 'price_date': row[3]}
     return t
+
+def get_price_history():
+    """Return {station: [(price_date, price), ...]} ordered by date."""
+    cursor.execute('SELECT station, price_date, price FROM fuel_prices ORDER BY price_date')
+    history = {}
+    for station, price_date, price in cursor.fetchall():
+        history.setdefault(station, []).append((price_date, price))
+    return history
