@@ -6,9 +6,8 @@ from database.data_handler import get_data_from_db_at_date
 from history_page import plot_price_history
 from datetime import datetime
 
-# Lazy loading of axes and canvases to avoid circular import issues
-ax = None
-canvas = None
+# Lazy loading of widgets to avoid circular import issues
+cheapest_label = None
 history_ax = None
 history_canvas = None
 
@@ -18,26 +17,17 @@ pages = {}
 switch_button = None
 
 
-def fetch_and_plot_data():
-    # Clear the current figure
-    ax.clear()
-
+def fetch_and_show_cheapest():
     data_dict = get_data_from_db_at_date(datetime.today().strftime('%Y-%m-%d'))
 
-    stations = []
-    prices = []
-    for _, value in data_dict.items():
-        stations.append(value['station'])
-        prices.append(value['price'])
+    if not data_dict:
+        cheapest_label.config(text="No price data for today")
+        return
 
-    ax.bar(stations, prices)
-    ax.set_xlabel('Station')
-    ax.set_ylabel('Price (EUR/litre)')
-    ax.set_title('Fuel Prices by Station')
-    ax.set_xticks(range(len(stations)))
-    ax.set_xticklabels(stations, ha='center')
-
-    canvas.draw()
+    cheapest = min(data_dict.values(), key=lambda v: v['price'])
+    cheapest_label.config(
+        text=f"Cheapest station today:\n{cheapest['station']}\n{cheapest['price']:.3f} EUR/litre"
+    )
 
 
 def fetch_and_plot_history():
@@ -47,7 +37,7 @@ def fetch_and_plot_history():
 
 def refresh_current_page():
     if current_page == 'prices':
-        fetch_and_plot_data()
+        fetch_and_show_cheapest()
     else:
         fetch_and_plot_history()
 
@@ -92,13 +82,17 @@ def initialize_gui():
     content = ttk.Frame(root)
     content.pack(fill=tk.BOTH, expand=True)
 
-    # Page 1: current prices (bar chart)
+    # Page 1: cheapest station (label)
     pages['prices'] = ttk.Frame(content)
-    fig = Figure(figsize=(6, 4), dpi=100)
-    global ax, canvas
-    ax = fig.add_subplot(111)
-    canvas = FigureCanvasTkAgg(fig, master=pages['prices'])
-    canvas.get_tk_widget().pack(fill=tk.BOTH, expand=True)
+    global cheapest_label
+    cheapest_label = ttk.Label(
+        pages['prices'],
+        text="",
+        font=("Segoe UI", 28, "bold"),
+        justify=tk.CENTER,
+        anchor=tk.CENTER,
+    )
+    cheapest_label.pack(fill=tk.BOTH, expand=True)
 
     # Page 2: price history (line chart)
     pages['history'] = ttk.Frame(content)
