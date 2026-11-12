@@ -23,7 +23,7 @@ def plot_price_history():
     for station, points in history.items():
         dates = [datetime.strptime(d, '%Y-%m-%d') for d, _ in points]
         prices = [p for _, p in points]
-        ax.plot(dates, prices, marker='o', markersize=3, label=station)
+        ax.plot(mdates.date2num(dates), prices, marker='o', markersize=3, label=station)
 
     ax.set_xlabel('Date')
     ax.set_ylabel('Price (EUR/litre)')
@@ -32,6 +32,7 @@ def plot_price_history():
     if history:
         ax.legend()
 
+    ax.xaxis.set_major_locator(mdates.AutoDateLocator())
     ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b'))
     ax.figure.autofmt_xdate()
 
