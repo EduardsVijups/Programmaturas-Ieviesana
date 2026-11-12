@@ -18,7 +18,7 @@ def get_api_response():
     }
 
 
-    response = requests.get(url, headers=headers)
+    response = requests.get(url, headers=headers) # type: ignore
     
     data = response.json()
 
